@@ -1,11 +1,10 @@
 import _ from 'lodash';
 
 const INDENT_SIZE = 4;
-const SHIFT = 2; // смещение влево для спецсимвола
+const SHIFT = 2;
 
 const isObject = (value) => _.isObject(value) && !Array.isArray(value);
 
-// Форматирует обычное значение (не узел дерева диффа)
 const formatValue = (value, depth) => {
   if (!isObject(value)) {
     return String(value);
