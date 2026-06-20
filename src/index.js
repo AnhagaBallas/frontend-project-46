@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import parseData from './parsers.js';
 import buildDiff from './buildDiff.js';
-import formatDiff from './formatters/stylish.js';
+import getFormatter from './formatters/index.js';
 
 const getAbsolutePath = (filepath) => path.resolve(process.cwd(), filepath);
 
@@ -15,13 +15,9 @@ const genDiff = (filepath1, filepath2, format = 'stylish') => {
   const data2 = parseData(readFile(filepath2), getFormat(filepath2));
 
   const diff = buildDiff(data1, data2);
+  const formatter = getFormatter(format);
 
-  switch (format) {
-    case 'stylish':
-      return formatDiff(diff);
-    default:
-      throw new Error(`Unknown format: ${format}`);
-  }
+  return formatter(diff);
 };
 
 export default genDiff;

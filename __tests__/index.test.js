@@ -4,25 +4,48 @@ import genDiff from '../src/index.js';
 
 const getFixturePath = (filename) => path.join('__fixtures__', filename);
 
-const expected = fs.readFileSync(getFixturePath('expected_stylish.txt'), 'utf-8').trimEnd();
+const readFixture = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8').trimEnd();
 
-test('compare nested JSON files', () => {
-  expect(genDiff(
-    getFixturePath('file1.json'),
-    getFixturePath('file2.json'),
-  )).toBe(expected);
+const expectedStylish = readFixture('expected_stylish.txt');
+const expectedPlain = readFixture('expected_plain.txt');
+
+describe('stylish format', () => {
+  test('compare nested JSON files', () => {
+    expect(genDiff(
+      getFixturePath('file1.json'),
+      getFixturePath('file2.json'),
+    )).toBe(expectedStylish);
+  });
+
+  test('compare nested YAML files', () => {
+    expect(genDiff(
+      getFixturePath('file1.yml'),
+      getFixturePath('file2.yml'),
+    )).toBe(expectedStylish);
+  });
+
+  test('compare JSON and YAML files', () => {
+    expect(genDiff(
+      getFixturePath('file1.json'),
+      getFixturePath('file2.yml'),
+    )).toBe(expectedStylish);
+  });
 });
 
-test('compare nested YAML files', () => {
-  expect(genDiff(
-    getFixturePath('file1.yml'),
-    getFixturePath('file2.yml'),
-  )).toBe(expected);
-});
+describe('plain format', () => {
+  test('compare nested JSON files', () => {
+    expect(genDiff(
+      getFixturePath('file1.json'),
+      getFixturePath('file2.json'),
+      'plain',
+    )).toBe(expectedPlain);
+  });
 
-test('compare JSON and YAML files', () => {
-  expect(genDiff(
-    getFixturePath('file1.json'),
-    getFixturePath('file2.yml'),
-  )).toBe(expected);
+  test('compare nested YAML files', () => {
+    expect(genDiff(
+      getFixturePath('file1.yml'),
+      getFixturePath('file2.yml'),
+      'plain',
+    )).toBe(expectedPlain);
+  });
 });
